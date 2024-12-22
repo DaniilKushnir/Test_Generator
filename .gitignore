@@ -1,0 +1,44 @@
+# Python файли кешу
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Віртуальне середовище
+venv/
+.env
+*.env
+
+# Конфіденційні файли
+instance/
+config.py
+
+# Логи
+*.log
+
+# Ідеї середовищ розробки
+.vscode/
+.idea/
+
+# Системні файли
+.DS_Store
+Thumbs.db
+
+# Файли пакетного менеджера
+node_modules/
+package-lock.json
+yarn.lock
+
+# Статичні файли, які генеруються динамічно
+staticfiles/
+media/
+
+# Файли залежностей
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Файли тестів
+coverage/
+*.cover
+.hypothesis/
+.tox/
