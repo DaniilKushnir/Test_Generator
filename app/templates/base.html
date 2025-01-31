@@ -1,29 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test Generator - Create and manage your tests effortlessly.">
+    <meta name="author" content="Your Name">
+    <meta property="og:title" content="Test Generator">
+    <meta property="og:description" content="Create and manage your tests effortlessly with Test Generator.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/preview.png') }}">
+    <meta property="og:url" content="{{ request.url }}">
     <title>{% block title %}Test Generator{% endblock %}</title>
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
+
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                {% if session.get('username') %}
-                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                    {% if session.get('role') == 'admin' %}
-                        <li><a href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a></li>
-                    {% elif session.get('role') == 'student' %}
-                        <li><a href="{{ url_for('student.dashboard') }}">Student Dashboard</a></li>
-                    {% endif %}
-                {% endif %}
-            </ul>
-        </nav>
+    <header class="bg-dark text-white py-3">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="{{ url_for('auth.login') }}">Test Generator</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        {% if session.get('username') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                            </li>
+                            {% if session.get('role') == 'admin' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a>
+                                </li>
+                            {% elif session.get('role') == 'student' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('student.dashboard') }}">Student Dashboard</a>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </header>
-    <main>
-        {% block content %}{% endblock %}
+
+    <main class="py-4">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
     </main>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
+
 </html>

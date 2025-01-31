@@ -6,18 +6,22 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    # Конфігурація
+    @app.route('/')
+    def home():
+        return redirect(url_for('auth.login'))  
+    
+   
     app.config['SECRET_KEY'] = os.urandom(24)
     app.config['SESSION_TYPE'] = 'filesystem'
     Session(app)
 
-    # Підключення до MongoDB
+    
     client = MongoClient('localhost', 27017)
     app.db = client['Test_Generator']
 
-    # Реєстрація маршрутів
+
     from app.routes.auth_routes import auth_bp
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp, url_prefix='')
     from app.routes.admin_routes import admin_bp
     app.register_blueprint(admin_bp)
     from app.routes.student_routes import student_bp

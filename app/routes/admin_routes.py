@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app , abort
 from werkzeug.security import generate_password_hash
+import json
+from bson.objectid import ObjectId
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -32,3 +34,47 @@ def add_student():
         return redirect(url_for('admin.dashboard'))
 
     return render_template('add_student.html')
+
+
+@admin_bp.route('/upload_tests', methods=['GET', 'POST'])
+def add_tests():
+    if request.method == 'POST':
+        uploaded_file = request.files.get('test_file')
+
+        if uploaded_file and uploaded_file.filename.endswith('.json'):
+            try:
+                file = uploaded_file.stream.read().decode('utf-8')
+                tests = json.loads(file)
+
+                 
+                if isinstance(tests, list):
+                    current_app.db["tests"].insert_many(tests)
+                elif isinstance(tests, dict):
+                    current_app.db["tests"].insert_one(tests)
+                else:
+                    raise ValueError("Invalid JSON structure. Must be an object or an array of objects.")
+                    
+
+                flash("Tests uploaded successfully!", "success")
+                return redirect(url_for('admin.view_tests'))
+
+            except json.JSONDecodeError:
+                flash("Invalid JSON file. Please upload a valid JSON.", "danger")
+            except Exception as e:
+                flash(f"An error occurred: {e}", "danger")
+        else:
+            flash("Please upload a valid JSON file.", "danger")
+            
+    return render_template('add_tests.html')   
+
+
+
+
+@admin_bp.route('/view_tests', methods=['GET'])
+def view_tests():
+    tests = list(current_app.db["tests"].find())  
+    return render_template('view_tests.html', tests=tests)
+
+
+
+
